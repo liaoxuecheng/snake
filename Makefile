@@ -22,10 +22,15 @@ export LIBS
 export CC
 export BINDIR
 
-.PHONY:clean
+.PHONY:clean install
 
 clean:
 	for dir in $(SUBDIRS); do \
 	$(MAKE) -C $$dir $@ ;\
 	done
 	$(RM) $(BINDIR)/*
+
+install:
+	for dir in $(SUBDIRS); do \
+	$(MAKE) -C $$dir $@ ;\
+	done

@@ -1,4 +1,4 @@
-all:tetris snake install
+all:tetris snake
 
 $(BUILD_OUTPUT)/%.d: %.cpp
 	$(CC) -MM $(CPPFLAGS) $(build-dir)/$< > $@.$$$$; \
@@ -19,14 +19,14 @@ $(BUILD_OUTPUT)/snake: $(BUILD_OUTPUT)/node.o
 $(BUILD_OUTPUT)/tetris: $(BUILD_OUTPUT)/tetris.o
 	$(CC) -Wall $< -o $@ $(CPPFLAGS) $(LIBS)
 
-.PHONY:tetris snake install
+.PHONY:tetris snake
 
 tetris:$(BUILD_OUTPUT)/tetris
 
-snake:$(BUILD_OUTPUT)/snake
+snake:$(BUILD_OUTPUT)/snake tetris
 
-install:tetris snake
-	cp $(BUILD_OUTPUT)/snake $(BUILD_OUTPUT)/tetris $(BINDIR)
+install:$(BUILD_OUTPUT)/snake $(BUILD_OUTPUT)/tetris
+	cp $^ $(BINDIR)
 
 
 .PHONY:clean
