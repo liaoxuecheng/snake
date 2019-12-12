@@ -1,14 +1,15 @@
-SUBDIRS = src
+SUBDIRS = $(CURDIR)/src
 BINDIR = $(CURDIR)/bin
 PHONY:= subdirs $(SUBDIRS)
 
-.PHONY: subdirs $(SUBDIRS)
-subdirs: $(SUBDIRS)
-$(SUBDIRS):
-	$(MAKE) -C $@
-
 build-dir=$(CURDIR)/src
 BUILD_OUTPUT=$(CURDIR)/build/output
+
+
+.PHONY: subdirs $(SUBDIRS) clean install
+subdirs: $(SUBDIRS)
+$(SUBDIRS):
+	$(MAKE) -C $(BUILD_OUTPUT) -f $@/Makefile
 
 CC=g++
 CFLAGS:=-g -I $(build-dir)/include
@@ -22,15 +23,9 @@ export LIBS
 export CC
 export BINDIR
 
-.PHONY:clean install
-
-clean:
+install clean snake tetris:
+	@$(RM) $(BINDIR)/*
 	for dir in $(SUBDIRS); do \
-	$(MAKE) -C $$dir $@ ;\
+	$(MAKE) -C $(BUILD_OUTPUT) -f $$dir/Makefile $@ ;\
 	done
-	$(RM) $(BINDIR)/*
 
-install:
-	for dir in $(SUBDIRS); do \
-	$(MAKE) -C $$dir $@ ;\
-	done

@@ -1,16 +1,16 @@
 all:tetris snake
 
-$(BUILD_OUTPUT)/%.d: %.cpp
-	$(CC) -MM $(CPPFLAGS) $(build-dir)/$< > $@.$$$$; \
+$(BUILD_OUTPUT)/%.d: $(build-dir)/%.cpp
+	$(CC) -MM $(CPPFLAGS) $< > $@.$$$$; \
 	sed 's,\($*\)\.o[ :]*,$(BUILD_OUTPUT)/\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 
 local_src=$(wildcard $(build-dir)/*.cpp)
 
 sources = $(notdir $(local_src))
-sinclude $(sources:%.cpp=$(BUILD_OUTPUT)/%.d)
+sinclude $(local_src:$(build-dir)/%.cpp=$(BUILD_OUTPUT)/%.d)
 
-$(BUILD_OUTPUT)/%.o: %.cpp
+$(BUILD_OUTPUT)/%.o: $(build-dir)/%.cpp
 	$(CC) -c -Wall $< -o $@ $(CPPFLAGS)
 
 $(BUILD_OUTPUT)/snake: $(BUILD_OUTPUT)/node.o
@@ -25,7 +25,7 @@ tetris:$(BUILD_OUTPUT)/tetris
 
 snake:$(BUILD_OUTPUT)/snake tetris
 
-install:$(BUILD_OUTPUT)/snake $(BUILD_OUTPUT)/tetris
+install:$(BUILD_OUTPUT)/tetris $(BUILD_OUTPUT)/snake
 	cp $^ $(BINDIR)
 
 
